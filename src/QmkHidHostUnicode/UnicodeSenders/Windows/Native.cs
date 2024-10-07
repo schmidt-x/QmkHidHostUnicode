@@ -19,6 +19,21 @@ internal partial class Native
 	{
 		internal uint type;
 		internal InputUnion u;
+		
+		internal static INPUT NewKeyboardInput(
+			ushort mVk = default,
+			ushort wScan = default,
+			uint dwFlags = default,
+			uint time = default,
+			IntPtr dwExtraInfo = default)
+		{
+			return new INPUT
+			{
+				type = INPUT_KEYBOARD,
+				u = new InputUnion
+				{ ki = new KEYBDINPUT { wVk = mVk, wScan = wScan, dwFlags = dwFlags, time = time, dwExtraInfo = dwExtraInfo }}
+			};
+		}
 	}
 	
 	[StructLayout(LayoutKind.Explicit)]

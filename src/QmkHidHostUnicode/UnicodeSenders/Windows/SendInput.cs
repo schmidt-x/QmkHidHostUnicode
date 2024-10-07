@@ -10,15 +10,20 @@ public class SendInput : IUnicodeSender
 		uint cInputs;
 		Native.INPUT[] pInputs;
 		
-		if (codePoint > 0xFFFF)
+		switch (codePoint)
 		{
-			cInputs = 4;
-			pInputs = GetSurrogatePairInputs(codePoint);
-		}
-		else
-		{
-			cInputs = 2;
-			pInputs = GetInputs((ushort)codePoint);
+			case <= 0xFFFF:
+				cInputs = 2;
+				pInputs = GetInputs((ushort)codePoint);
+				break;
+			
+			case <= 0x10FFFF:
+				cInputs = 4;
+				pInputs = GetSurrogatePairInputs(codePoint);
+				break;
+			
+			default:
+				return new Exception($"Invalid code point: 0x{codePoint:X06}");
 		}
 		
 		_ = Native.SendInput(cInputs, pInputs, Marshal.SizeOf<Native.INPUT>());
@@ -32,71 +37,20 @@ public class SendInput : IUnicodeSender
 	{
 		GetSurrogatePair(codePoint, out var highSurrogate, out var lowSurrogate);
 		
-		return 
+		return
 		[
-			new Native.INPUT
-			{
-				type = Native.INPUT_KEYBOARD,
-				u = new Native.InputUnion
-				{
-					ki = new Native.KEYBDINPUT { wScan = highSurrogate, dwFlags = Native.KEYEVENTF_UNICODE }
-				}
-			},
-			
-			new Native.INPUT
-			{
-				type = Native.INPUT_KEYBOARD,
-				u = new Native.InputUnion
-				{
-					ki = new Native.KEYBDINPUT { wScan = lowSurrogate, dwFlags = Native.KEYEVENTF_UNICODE }
-				}
-			},
-			
-			new Native.INPUT
-			{
-				type = Native.INPUT_KEYBOARD,
-				u = new Native.InputUnion
-				{
-					ki = new Native.KEYBDINPUT
-						{ wScan = highSurrogate, dwFlags = Native.KEYEVENTF_KEYUP | Native.KEYEVENTF_UNICODE }
-				}
-			},
-			
-			new Native.INPUT
-			{
-				type = Native.INPUT_KEYBOARD,
-				u = new Native.InputUnion
-				{
-					ki = new Native.KEYBDINPUT 
-						{ wScan = lowSurrogate, dwFlags = Native.KEYEVENTF_KEYUP | Native.KEYEVENTF_UNICODE }
-				}
-			}
+			Native.INPUT.NewKeyboardInput(wScan: highSurrogate, dwFlags: Native.KEYEVENTF_UNICODE),
+			Native.INPUT.NewKeyboardInput(wScan: lowSurrogate,  dwFlags: Native.KEYEVENTF_UNICODE),
+			Native.INPUT.NewKeyboardInput(wScan: highSurrogate, dwFlags: Native.KEYEVENTF_UNICODE | Native.KEYEVENTF_KEYUP),
+			Native.INPUT.NewKeyboardInput(wScan: lowSurrogate,  dwFlags: Native.KEYEVENTF_UNICODE | Native.KEYEVENTF_KEYUP)
 		];
 	}
 	
-	private static Native.INPUT[] GetInputs(ushort codePoint)
-	{
-		return
+	private static Native.INPUT[] GetInputs(ushort codePoint) =>
 		[
-			new Native.INPUT
-			{
-				type = Native.INPUT_KEYBOARD,
-				u = new Native.InputUnion
-				{
-					ki = new Native.KEYBDINPUT { wScan = codePoint, dwFlags = Native.KEYEVENTF_UNICODE }
-				}
-			},
-			
-			new Native.INPUT
-			{
-				type = Native.INPUT_KEYBOARD,
-				u = new Native.InputUnion
-				{
-					ki = new Native.KEYBDINPUT { wScan = codePoint, dwFlags = Native.KEYEVENTF_KEYUP | Native.KEYEVENTF_UNICODE }
-				}
-			}
+			Native.INPUT.NewKeyboardInput(wScan: codePoint, dwFlags: Native.KEYEVENTF_UNICODE),
+			Native.INPUT.NewKeyboardInput(wScan: codePoint, dwFlags: Native.KEYEVENTF_UNICODE | Native.KEYEVENTF_KEYUP)
 		];
-	}
 	
 	private static void GetSurrogatePair(uint codePoint, out ushort highSurrogate, out ushort lowSurrogate)
 	{

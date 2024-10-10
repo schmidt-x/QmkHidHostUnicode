@@ -3,15 +3,25 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<PublishSingleFile>true</PublishSingleFile>
+		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+		<DebugType>embedded</DebugType>
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<Content Include="appsettings.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		<Content Include="Binaries\hidapi.dll" Condition="'$(RuntimeIdentifier.StartsWith(win))'">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TargetPath>hidapi.dll</TargetPath>
 		</Content>
+		
+		<Content Include="Binaries\libhidapi-hidraw.so" Condition="'$(RuntimeIdentifier.StartsWith(linux))'">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TargetPath>libhidapi-hidraw.so</TargetPath>
+		</Content>
+		
+		<Content Include="appsettings.json" CopyToOutputDirectory="PreserveNewest"/>
 	</ItemGroup>
 	
 	<ItemGroup>

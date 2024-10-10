@@ -49,6 +49,12 @@ public class UnicodeListener
 				if (id != hidUnicodeReportId) continue;
 				
 				var codePoint = (uint)((input[1] << 16) | (input[2] << 8) | input[3]);
+				if (codePoint > 0x10FFFF)
+				{
+					_logger.Warning("[{alias}] Invalid CodePoint: 0x{codePoint:X06}", alias, codePoint);
+					continue;
+				}
+				
 				_logger.Information("[{alias}] CodePoint: 0x{codePoint:X06}", alias, codePoint);
 				
 				var exception = _sender.Send(codePoint);

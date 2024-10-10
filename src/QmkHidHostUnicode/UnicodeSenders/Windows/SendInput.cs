@@ -23,7 +23,7 @@ public class SendInput : IUnicodeSender
 				break;
 			
 			default:
-				return new Exception($"Invalid code point: 0x{codePoint:X06}");
+				return new Exception($"Invalid CodePoint: 0x{codePoint:X06}");
 		}
 		
 		_ = Native.SendInput(cInputs, pInputs, Marshal.SizeOf<Native.INPUT>());

@@ -6,6 +6,7 @@ using System.Threading;
 using System.IO;
 using Serilog;
 using System;
+using HidApi;
 
 namespace QmkHidHostUnicode;
 
@@ -30,6 +31,9 @@ public class Program
 		
 		var sender = UnicodeSelector.GetSender();
 		var logger = new LoggerConfiguration().ReadFrom.Configuration(config).CreateLogger();
+		
+		// called to get an exception in the main thread if the required binaries are not present
+		_ = Hid.Version();
 		
 		var threads = new List<Thread>();
 		

@@ -16,9 +16,9 @@
 			<TargetPath>hidapi.dll</TargetPath>
 		</Content>
 		
-		<Content Include="Binaries\libhidapi-hidraw.so" Condition="'$(RuntimeIdentifier.StartsWith(linux))'">
+		<Content Include="Binaries\libhidapi-hidraw.so.0" Condition="'$(RuntimeIdentifier.StartsWith(linux))'">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<TargetPath>libhidapi-hidraw.so</TargetPath>
+			<TargetPath>libhidapi-hidraw.so.0</TargetPath>
 		</Content>
 		
 		<Content Include="appsettings.json" CopyToOutputDirectory="PreserveNewest"/>

@@ -44,7 +44,7 @@ public class Program
 			
 			var unicodeListener = new UnicodeListener(deviceOpts, sender, logger);
 			
-			var thread = new Thread(unicodeListener.StartListening);
+			var thread = new Thread(unicodeListener.Start);
 			thread.Start();
 			threads.Add(thread);
 		}

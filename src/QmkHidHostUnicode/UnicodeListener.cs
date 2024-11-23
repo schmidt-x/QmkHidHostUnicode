@@ -45,7 +45,7 @@ public class UnicodeListener
 			"[{alias}] Device connected ({deviceName})",
 			alias, $"{_deviceInfo.ManufacturerString}: {_deviceInfo.ProductString}");
 		
-		byte hidUnicodeReportId = _deviceOpts.HidUnicodeReportId;
+		byte reportId = _deviceOpts.ReportId;
 		int keyRepeatFreq = _deviceOpts.RepeatFrequency;
 		
 		try
@@ -64,7 +64,7 @@ public class UnicodeListener
 					continue;
 				}
 				
-				if (input[0] != hidUnicodeReportId) // wrong report id
+				if (input[0] != reportId) // wrong report id
 				{
 					if (_codePoints.Count == 0) continue;
 					UpdateTimeoutAndSendIfExpiring(_codePoints.Last!.Value);
@@ -170,7 +170,7 @@ public class UnicodeListener
 			
 			if (deviceInfo is not null) return deviceInfo;
 			
-			Thread.Sleep(_deviceOpts.ReconnectDelay);
+			Thread.Sleep(_deviceOpts.ReconnectInterval);
 		}
 	}
 	
@@ -200,7 +200,7 @@ public class UnicodeListener
 			try { device = new Device(_deviceInfo.Path); }
 			catch
 			{
-				Thread.Sleep(_deviceOpts.ReconnectDelay);
+				Thread.Sleep(_deviceOpts.ReconnectInterval);
 				continue;
 			}
 			

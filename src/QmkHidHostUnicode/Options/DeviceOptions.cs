@@ -11,8 +11,8 @@ public class DeviceOptions
 	public ushort ProductId { get; init; }
 	public ushort UsagePage { get; init; } = 0xFF60;
 	public ushort UsageId { get; init; } = 0x61;
-	public byte HidUnicodeReportId { get; init; }
-	public int ReconnectDelay { get; init; }
+	public byte ReportId { get; init; }
+	public int ReconnectInterval { get; init; }
 	
 	private readonly int _repeatDelay;
 	public int RepeatDelay
@@ -28,5 +28,10 @@ public class DeviceOptions
 		init => _repeatFrequency = Math.Max(value, 1);
 	}
 	
-	public int MaxPressedKeys { get; init; }
+	private readonly int _maxPressedKeys;
+	public int MaxPressedKeys
+	{
+		get => _maxPressedKeys;
+		init => _maxPressedKeys = Math.Max(value, 1);
+	}
 }

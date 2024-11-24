@@ -1,11 +1,30 @@
 # QmkHidHostUnicode
 
+## Table of Contents
+- [Introduction](#introduction)
+- [Configuration](#configuration)
+	- [Alias](#alias)
+  - [VendorId and ProductId](#vendorid-and-productid)
+  - [UsagePage and UsageId](#usagepage-and-usageid)
+  - [ReportId](#reportid)
+  - [ReconnectInterval](#reconnectinterval)
+  - [RepeatDelay and RepeatFrequency](#repeatdelay-and-repeatfrequency)
+  - [MaxPressedKeys](#maxpressedkeys)
+- [Usage](#usage)
+  - [Report Signature](#report-signature)
+  - [Examples](#examples)
+    - [Custom keycodes](#custom-keycodes)
+    - [Unicode Basic](#unicode-basic)
+    - [Unicode Map](#unicode-map)
+
 ## Introduction
 A simple, cross-platform console app for mapping raw HID reports into Unicode character input. The app acts as a host and listens for devices capable of sending raw, arbitrary reports (such as any keyboard powered by [Qmk Firmware](https://docs.qmk.fm/) using [Raw HID feature](https://docs.qmk.fm/features/rawhid)). These reports contain Unicode code points (along with some additional information), which the app translates into keystrokes using OS-specific APIs.
 
-As a result, the app provides layout-independent input, with access to symbols and characters across the entire Unicode range.
+As a result, the app provides layout-independent input, supporting symbols and characters across the entire Unicode range, and additionally implements a customizable Key Repeat feature.
 
-Customizable Key Repeat feature is also supported.
+> [!NOTE]
+> Currently, only Windows is supported.<br>
+> Support for Linux and macOS is planned for future releases.
 
 ## Configuration
 
@@ -161,11 +180,11 @@ void raw_hid_send_unicode(uint32_t codepoint, bool is_pressed) {
 ```
 
 Basically, there are 3 ways to use Unicode keys:
-- Custom keycodes
-- Unicode Basic
-- Unicode Map
+- [Custom keycodes](https://docs.qmk.fm/custom_quantum_functions#custom-keycodes)
+- [Unicode Basic](https://docs.qmk.fm/features/unicode#input-subsystems) (tab «Basic»)
+- [Unicode Map](https://docs.qmk.fm/features/unicode#input-subsystems) (tab «Unicode Map»)
 
-#### [Custom keycodes](https://docs.qmk.fm/custom_quantum_functions#custom-keycodes)
+#### Custom keycodes
 
 ```c
 enum custom_keycodes {
@@ -197,7 +216,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 ```
 
-#### [Unicode Basic](https://docs.qmk.fm/features/unicode#input-subsystems) (tab «Basic»)
+#### Unicode Basic
 
 ```c
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -213,7 +232,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 ```
 
-#### [Unicode Map](https://docs.qmk.fm/features/unicode#input-subsystems) (tab «Unicode Map»)
+#### Unicode Map
 
 ```c
 enum unicode_names {
@@ -242,4 +261,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 ```
 
 > [!NOTE]
-> Note that in both Unicode cases, the feature itself is not required to be turned on.
+> Note that in both Unicode examples, the feature itself is not required to be turned on.

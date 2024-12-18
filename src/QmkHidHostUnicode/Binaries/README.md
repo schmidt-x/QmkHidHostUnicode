@@ -1,0 +1,1 @@
+### These binaries were taken/compiled from the [hidapi](https://github.com/libusb/hidapi?tab=readme-ov-file#hidapi-library-for-windows-linux-freebsd-and-macos) repository. All credits and respect go to the authors and contributors of the hidapi project.

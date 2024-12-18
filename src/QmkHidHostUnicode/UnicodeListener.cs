@@ -1,3 +1,4 @@
+using QmkHidHostUnicode.Extensions;
 using QmkHidHostUnicode.UnicodeSenders;
 using System.Collections.Generic;
 using QmkHidHostUnicode.Options;
@@ -80,13 +81,13 @@ public class UnicodeListener
 				
 				bool isPressed = input[4] > 0;
 				
-				_logger.Information("[{alias}] CodePoint: 0x{codePoint:X06} " + (char)codePoint + " {state}",
-					alias, codePoint, isPressed ? "Down" : "Up");
-				
 				if (isPressed)
 					HandleDownEvent(codePoint);
 				else
 					HandleUpEvent(codePoint);
+				
+				_logger.Information("[{alias}] CodePoint: 0x{codePoint:X06} " + codePoint.ToUtf16String() + " {state}",
+					alias, codePoint, isPressed ? "Down" : "Up");
 			}
 		}
 		finally { _device.Dispose(); }
